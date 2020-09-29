@@ -1,0 +1,31 @@
+{
+  "name": "project_api_nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 start src/index.js --watch --no-daemon --node-args=\"-r esm\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TJBorges/Project_Api_NodeJS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TJBorges/Project_Api_NodeJS/issues"
+  },
+  "homepage": "https://github.com/TJBorges/Project_Api_NodeJS#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "esm-node": "^1.0.7",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.7",
+    "nodemon": "^2.0.4",
+    "pm2": "^4.4.1",
+    "restify": "^8.5.1"
+  }
+}
