@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/TJBorges/Project_Api_NodeJS#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
     "esm-node": "^1.0.7",
