@@ -3,6 +3,7 @@ include .env
 .PHONY: up
 up:
 	docker-compose up -d
+	docker-compose restart api
 
 
 .PHONY: down

@@ -1,8 +1,10 @@
 const express = require('express');
+const authMiddleware = require('../middlewares/autenticador');
 
 const Produto = require('../models/Produto');
 
 const router = express.Router();
+router.use(authMiddleware);
 
 router.post('/cadastrar', async (req, res) => {
 
@@ -28,7 +30,9 @@ router.get('/listar', async (req, res) => {
         if(produto.length == 0)
           return res.status(400).send({ error: 'Nenhum Produto Encontrado' });
           
-        res.send({ produto });        
+          produto.descricao = undefined;
+          
+        res.send( { produto });        
     }
     catch(err){
         return res.status(400).send({ error: 'Falha ao Buscar Produto' });
@@ -36,6 +40,21 @@ router.get('/listar', async (req, res) => {
 });
 
 router.post('/busca_cod_barras', async (req, res) => {
+    try{
+        const { codigo } = req.body;
+        const produto = await Produto.findOne({ codigo });
+        
+        if(!produto)
+        return res.send(400, 'Produto Não Encontrado');
+
+        res.send ({ produto });    
+    }
+    catch(err){
+        return res.status(400).send({ error: 'Falha ao Buscar Produto por Código de Barras' });
+    }
+});
+
+router.post('/detalhes_produto', async (req, res) => {
     try{
         const { codigo } = req.body;
         const produto = await Produto.findOne({ codigo });
@@ -83,7 +102,7 @@ router.post('/remover', async (req, res) => {
         return res.send(400, 'Produto não encontrado')
 
         await Produto.findByIdAndDelete(produto.id);
-        return res.send({ sucess: 'Produto Removido' });
+        return res.send({ sucess: 'Produto \''+ produto.descricao +'\' Removido' });
     
     }
     catch(err){

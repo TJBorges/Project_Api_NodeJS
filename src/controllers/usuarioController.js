@@ -1,8 +1,19 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+
+const hash = require('../config/auth.json');
 
 const Usuario = require('../models/Usuario');
 
 const router = express.Router();
+
+function gerarToken(params = {}){
+    return jwt.sign(params, hash.secret, {
+        expiresIn: 600,
+    });
+}
 
 router.post('/cadastrar', async (req, res) => {
 
@@ -16,25 +27,29 @@ router.post('/cadastrar', async (req, res) => {
         const usuario = await Usuario.create(req.body);
 
         usuario.senha = undefined;
-        return res.send({ usuario });
+        
+        return res.send({ usuario, token: gerarToken({ id: usuario.id }) });
     }
     catch(err) {
         return res.status(400).send({ error: 'Falha ao Cadastrar Usuário'});
     }
 });
 
-router.get('/listar', async (req, res) => {
-    try{
-        const usuario = await Usuario.find();
+router.post('/login', async (req, res) => {
+    const { email, senha } = req.body;
 
-        if(usuario.length == 0)
-          return res.status(400).send({ error: 'Nenhum Usuário Encontrado' });
-          
-        res.send({ usuario });
-    }
-    catch(err){
-        return res.status(400).send({ error: 'Falha ao buscar Usuário' });
-    }
+    const usuario = await Usuario.findOne({ email }).select('+senha');
+
+    if(!usuario)
+        return res.status(400).send({ error: 'Email ou Senha Inválidos' });
+
+    if(!await bcrypt.compare(senha, usuario.senha))
+        return res.status(400).send({ error: 'Email ou Senha Inválidos' });
+
+        usuario.senha = undefined;
+
+        res.send({ usuario, token: gerarToken({ id: usuario.id }) });
 });
+
 
 module.exports = app => app.use('/usuario', router);

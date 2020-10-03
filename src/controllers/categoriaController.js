@@ -1,8 +1,10 @@
 const express = require('express');
+const authMiddleware = require('../middlewares/autenticador');
 
 const Categoria = require('../models/Categoria');
 
 const router = express.Router();
+router.use(authMiddleware);
 
 router.post('/cadastro', async (req, res) => {
 
@@ -80,7 +82,7 @@ router.post('/remover', async (req, res) => {
         return res.send(400, 'Categoria não encontrada')
 
         await Categoria.findByIdAndDelete(categoria.id);
-        return res.send({ sucess: 'Categoria Removida' });
+        return res.send({ sucess: 'Categoria \''+ categoria.descricao +'\' Removida' });
     
     }
     catch(err){
