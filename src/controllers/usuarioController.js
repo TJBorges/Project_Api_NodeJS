@@ -11,7 +11,7 @@ const router = express.Router();
 
 function gerarToken(params = {}){
     return jwt.sign(params, hash.secret, {
-        expiresIn: 600,
+        expiresIn: 6000,
     });
 }
 

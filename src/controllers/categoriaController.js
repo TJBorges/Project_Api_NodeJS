@@ -6,7 +6,7 @@ const Categoria = require('../models/Categoria');
 const router = express.Router();
 router.use(authMiddleware);
 
-router.post('/cadastro', async (req, res) => {
+router.post('/cadastrar', async (req, res) => {
 
     const { codigo } = req.body;
 
@@ -20,6 +20,44 @@ router.post('/cadastro', async (req, res) => {
     }
     catch(err){
         return res.status(400).send({ error: 'Falha ao Cadastrar Categoria' });
+    }
+});
+
+router.post('/atualizar', async (req, res) => {
+    try{
+        const { codigo, descricao } = req.body;
+        const categoria = await Categoria.findOne({ codigo });
+        
+        if(!categoria)
+        return res.status(400).send({ error: 'Categoria não Encontrada' });
+
+        await Categoria.findByIdAndUpdate(categoria.id, {
+            '$set': {
+                descricao: descricao
+            }
+        });
+        return res.send({ sucess: 'Categoria \''+ descricao +'\' Atualizada' });
+    
+    }
+    catch(err){
+        return res.status(400).send({ error: 'Falha ao Atualizar Categoria' });
+    }
+});
+
+router.post('/remover', async (req, res) => {
+    try{
+        const { codigo } = req.body;
+        const categoria = await Categoria.findOne({ codigo });
+        
+        if(!categoria)
+        return res.status(400).send({ error: 'Categoria não Encontrada' });
+
+        await Categoria.findByIdAndDelete(categoria.id);
+        return res.send({ sucess: 'Categoria \''+ categoria.descricao +'\' Removida' });
+    
+    }
+    catch(err){
+        return res.status(400).send({ error: 'Falha ao Remover Categoria' });
     }
 });
 
@@ -37,13 +75,13 @@ router.get('/listar', async (req, res) => {
     }
 });
 
-router.post('/busca_cod', async (req, res) => {
+router.post('/buscar_cod', async (req, res) => {
     try{
         const { codigo } = req.body;
         const categoria = await Categoria.findOne({ codigo });
         
         if(!categoria)
-        return res.send(400, 'Categoria não encontrada')
+        return res.status(400).send({ error: 'Categoria não Encontrada' });
 
         res.send ({ categoria });    
     }
@@ -52,42 +90,5 @@ router.post('/busca_cod', async (req, res) => {
     }
 });
 
-router.post('/atualizar', async (req, res) => {
-    try{
-        const { codigo, descricao } = req.body;
-        const categoria = await Categoria.findOne({ codigo });
-        
-        if(!categoria)
-        return res.send(400, 'Categoria não Encontrada')
-
-        await Categoria.findByIdAndUpdate(categoria.id, {
-            '$set': {
-                descricao: descricao
-            }
-        });
-        return res.send({ descricao });
-    
-    }
-    catch(err){
-        return res.status(400).send({ error: 'Falha ao Atualizar Categoria' });
-    }
-});
-
-router.post('/remover', async (req, res) => {
-    try{
-        const { codigo } = req.body;
-        const categoria = await Categoria.findOne({ codigo });
-        
-        if(!categoria)
-        return res.send(400, 'Categoria não encontrada')
-
-        await Categoria.findByIdAndDelete(categoria.id);
-        return res.send({ sucess: 'Categoria \''+ categoria.descricao +'\' Removida' });
-    
-    }
-    catch(err){
-        return res.status(400).send({ error: 'Falha ao Remover Categoria' });
-    }
-});
 
 module.exports = app => app.use('/categoria', router);

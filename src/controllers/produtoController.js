@@ -23,59 +23,13 @@ router.post('/cadastrar', async (req, res) => {
     }
 });
 
-router.get('/listar', async (req, res) => {
-    try{
-        const produto = await Produto.find();
-
-        if(produto.length == 0)
-          return res.status(400).send({ error: 'Nenhum Produto Encontrado' });
-          
-          produto.descricao = undefined;
-          
-        res.send( { produto });        
-    }
-    catch(err){
-        return res.status(400).send({ error: 'Falha ao Buscar Produto' });
-    }
-});
-
-router.post('/busca_cod_barras', async (req, res) => {
-    try{
-        const { codigo } = req.body;
-        const produto = await Produto.findOne({ codigo });
-        
-        if(!produto)
-        return res.send(400, 'Produto Não Encontrado');
-
-        res.send ({ produto });    
-    }
-    catch(err){
-        return res.status(400).send({ error: 'Falha ao Buscar Produto por Código de Barras' });
-    }
-});
-
-router.post('/detalhes_produto', async (req, res) => {
-    try{
-        const { codigo } = req.body;
-        const produto = await Produto.findOne({ codigo });
-        
-        if(!produto)
-        return res.send(400, 'Produto Não Encontrado');
-
-        res.send ({ produto });    
-    }
-    catch(err){
-        return res.status(400).send({ error: 'Falha ao Buscar Produto por Código de Barras' });
-    }
-});
-
 router.post('/atualizar', async (req, res) => {
     try{
         const { codigo, descricao, quantidade, categoria, preco } = req.body;
         const produto = await Produto.findOne({ codigo });
         
         if(!produto)
-        return res.send(400, 'Produto não encontrado')
+        return res.status(400).send({ error: 'Produto Não Encontrado' });
 
         await Produto.findByIdAndUpdate(produto.id, {
             '$set': {
@@ -85,7 +39,7 @@ router.post('/atualizar', async (req, res) => {
                 preco: preco
             }
         });
-        return res.send({ produto });
+        return res.send({ sucess: 'Produto \''+ produto.codigo +'\' Atualizado' });
     
     }
     catch(err){
@@ -99,15 +53,45 @@ router.post('/remover', async (req, res) => {
         const produto = await Produto.findOne({ codigo });
         
         if(!produto)
-        return res.send(400, 'Produto não encontrado')
+        return res.status(400).send({ error: 'Produto Não Encontrado' });
 
         await Produto.findByIdAndDelete(produto.id);
-        return res.send({ sucess: 'Produto \''+ produto.descricao +'\' Removido' });
+        return res.send({ sucess: 'Produto \''+ produto.codigo +'\' Removido' });
     
     }
     catch(err){
         return res.status(400).send({ error: 'Falha ao Remover Produto' });
     }
 });
+
+router.get('/listar', async (req, res) => {
+    try{
+        const produto = await Produto.find();
+
+        if(produto.length == 0)
+          return res.status(400).send({ error: 'Nenhum Produto Encontrado' });
+          
+        res.send({ produto });        
+    }
+    catch(err){
+        return res.status(400).send({ error: 'Falha ao Buscar Produto' });
+    }
+});
+
+router.post('/buscar_cod_barras', async (req, res) => {
+    try{
+        const { codigo } = req.body;
+        const produto = await Produto.findOne({ codigo });
+        
+        if(!produto)
+        return res.status(400).send({ error: 'Produto Não Encontrado' });
+
+        res.send ({ produto });    
+    }
+    catch(err){
+        return res.status(400).send({ error: 'Falha ao Buscar Produto por Código de Barras' });
+    }
+});
+
 
 module.exports = app => app.use('/produto', router);
