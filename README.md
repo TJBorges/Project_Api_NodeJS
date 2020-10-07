@@ -55,7 +55,7 @@ Após o Download as mensagens "Creating db_mongo ...done" e "Creating api ...don
 } - token
 
 #### GET  - http://localhost:3001/categoria/listar
-* Content-Type: application/json - Authorization: Bearer
+* Authorization: Bearer
 * token
 
 #### POST - http://localhost:3001/categoria/buscar_cod
@@ -93,7 +93,7 @@ Após o Download as mensagens "Creating db_mongo ...done" e "Creating api ...don
 } - token
 
 #### GET  - http://localhost:3001/poduto/listar
-* Content-Type: application/json - Authorization: Bearer
+* Authorization: Bearer
 * token
 
 #### POST - http://localhost:3001/poduto/buscar_cod_barras
