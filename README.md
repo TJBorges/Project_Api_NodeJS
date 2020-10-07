@@ -3,10 +3,12 @@
 
 ### Trata-se de uma API para uma loja online de instrumentos musicais.
 
-Após Clonar o Repositório, basta rodar o comando "make up" dentro do diretório onde se encontra o código.
+Após Clonar o Repositório, basta executar o comando "make up" dentro do diretório onde se encontra o código.
 Serão realizados os Downloads das imagens necessárias para a montagem automática dos Containers via Docker.
 Após o Download as mensagens "Creating db_mongo ...done" e "Creating api ...done" deverão aparecer no seu prompt de comando, indicando que os serviços já estão ok na sua máquina local e pode começar a utilizar.
 
+Para Reiniciar os serviços, basta executar os comandos "make down" e "make up";
+Para parar os serviços, basta executar "make down";
 
 ### Features
 
@@ -18,6 +20,7 @@ Após o Download as mensagens "Creating db_mongo ...done" e "Creating api ...don
 
 ## Usuário
 #### POST - http://localhost:3001/usuario/cadastrar
+* Content-Type: application/json
 * {
 	"email": "email.email@gmail.com",
 	"senha": "senhaDHYBb",
@@ -27,6 +30,7 @@ Após o Download as mensagens "Creating db_mongo ...done" e "Creating api ...don
 
 
 #### POST - http://localhost:3001/usuario/login
+* Content-Type: application/json
 * {
 	"email": "email.email@gmail.com",
 	"senha": "senhaDHYBb"
